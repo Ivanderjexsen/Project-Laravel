@@ -6,7 +6,7 @@
 
             <span>
 
-                Copyright © 2026
+                Copyright © Library Mini 2026
 
             </span>
 

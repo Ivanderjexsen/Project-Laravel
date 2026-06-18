@@ -1,18 +1,39 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\LoanController;
-use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return redirect('/login');
 });
 
-Route::get('/dashboard', [DashboardController::class,'index']);
+Route::middleware('auth')->group(function () {
 
-Route::get('/books',[BookController::class,'index']);
+    Route::get('/dashboard',
+        [DashboardController::class,'index'])
+        ->name('dashboard');
 
-Route::get('/loans',[LoanController::class,'index']);
+    Route::get('/books',
+        [BookController::class,'index']);
 
-Route::get('/history',[ProfileController::class,'history']);
+    Route::get('/books/create',
+        [BookController::class,'create']);
+
+    Route::get('/books/edit',
+        [BookController::class,'edit']);
+
+    Route::get('/loans',
+        [LoanController::class,'index']);
+
+    Route::get('/loans/create',
+        [LoanController::class,'create']);
+
+    Route::get('/loans/edit',
+        [LoanController::class,'edit']);
+
+
+});
+
+require __DIR__.'/auth.php';

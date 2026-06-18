@@ -1,6 +1,13 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+    id="accordionSidebar">
 
-    <a class="sidebar-brand d-flex align-items-center justify-content-center">
+    <!-- Sidebar Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center"
+       href="{{ route('dashboard') }}">
+
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-book"></i>
+        </div>
 
         <div class="sidebar-brand-text mx-3">
             Library Mini
@@ -8,8 +15,9 @@
 
     </a>
 
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
+    <!-- Dashboard -->
     <li class="nav-item">
 
         <a class="nav-link" href="/dashboard">
@@ -25,9 +33,7 @@
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
-
         Master Data
-
     </div>
 
     <li class="nav-item">
@@ -63,6 +69,28 @@
             <span>Riwayat Saya</span>
 
         </a>
+
+    </li>
+
+    <hr class="sidebar-divider">
+
+    <li class="nav-item">
+
+        <form action="{{ route('logout') }}"
+              method="POST">
+
+            @csrf
+
+            <button type="submit"
+                    class="nav-link border-0 bg-transparent text-white">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                <span>Logout</span>
+
+            </button>
+
+        </form>
 
     </li>
 
