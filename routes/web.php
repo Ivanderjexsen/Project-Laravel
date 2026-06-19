@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\book\BukuController;
 use App\Http\Controllers\LoanController;
 
 Route::get('/', function () {
@@ -30,4 +31,14 @@ Route::delete('/loans/{id}', [LoanController::class, 'destroy'])->name('loans.de
     // Nanti tambahkan route untuk update & delete
 });
 
-require __DIR__.'/auth.php';
+
+
+//book
+Route::get('/', function () {
+    return redirect()->route('buku.index');
+});
+
+// Route resource untuk CRUD Buku
+Route::resource('buku', BukuController::class);
+
+require __DIR__ . '/auth.php';

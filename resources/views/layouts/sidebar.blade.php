@@ -2,9 +2,14 @@
     id="accordionSidebar">
 
     <!-- Sidebar Brand -->
+<<<<<<< HEAD
    <a class="sidebar-brand d-flex flex-column"
    href="{{ route('dashboard') }}"
    style="margin-bottom:70px;">
+=======
+    <a class="sidebar-brand d-flex align-items-center justify-content-center"
+        href="{{ route('dashboard') }}">
+>>>>>>> 9caddb6 (feat : books)
 
     <div class="sidebar-brand-icon mb-3">
 
@@ -41,16 +46,11 @@
         Master Data
     </div>
 
-    <li class="nav-item">
-
-        <a class="nav-link" href="/books">
-
+    <li class="nav-item {{ request()->routeIs('buku.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('buku.index') }}">
             <i class="fas fa-book"></i>
-
             <span>Data Buku</span>
-
         </a>
-
     </li>
 
     <li class="nav-item">
@@ -82,12 +82,12 @@
     <li class="nav-item">
 
         <form action="{{ route('logout') }}"
-              method="POST">
+            method="POST">
 
             @csrf
 
             <button type="submit"
-                    class="nav-link border-0 bg-transparent text-white">
+                class="nav-link border-0 bg-transparent text-white">
 
                 <i class="fas fa-sign-out-alt"></i>
 
