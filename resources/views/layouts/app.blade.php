@@ -10,11 +10,23 @@
 
     <title>@yield('title')</title>
 
+    <!-- font poppins -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet">
+
+    <!--font awesome-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}"
           rel="stylesheet">
 
     <link href="{{ asset('css/sb-admin-2.min.css') }}"
           rel="stylesheet">
+    
+    <link href="{{ asset('css/custom.css') }}"
+      rel="stylesheet">
 
 </head>
 

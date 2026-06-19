@@ -4,94 +4,111 @@
 
 @section('content')
 
-<div class="row justify-content-center">
+<div class="auth-card">
 
-    <div class="col-xl-6 col-lg-7 col-md-9">
+    <div class="text-center mb-4">
 
-        <div class="card shadow-lg my-5">
+        <i class="fas fa-user-plus auth-logo"></i>
 
-            <div class="card-body p-5">
+        <h1 class="auth-title">
+            REGISTER
+        </h1>
 
-                <div class="text-center">
+        <p class="auth-subtitle">
+            Buat akun baru untuk menggunakan Library Mini
+        </p>
 
-                    <h1 class="h4 text-gray-900 mb-4">
+    </div>
 
-                        Register Library Mini
+    <form method="POST" action="{{ route('register') }}">
 
-                    </h1>
+        @csrf
 
-                </div>
+        <div class="form-group mb-3">
 
-                <form method="POST"
-                      action="{{ route('register') }}">
+            <label class="auth-label">
+                Nama Lengkap
+            </label>
 
-                    @csrf
-
-                    <div class="form-group">
-
-                        <input
-                            type="text"
-                            name="name"
-                            class="form-control form-control-user"
-                            placeholder="Nama Lengkap">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <input
-                            type="email"
-                            name="email"
-                            class="form-control form-control-user"
-                            placeholder="Email">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <input
-                            type="password"
-                            name="password"
-                            class="form-control form-control-user"
-                            placeholder="Password">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <input
-                            type="password"
-                            name="password_confirmation"
-                            class="form-control form-control-user"
-                            placeholder="Konfirmasi Password">
-
-                    </div>
-
-                    <button class="btn btn-success btn-user btn-block">
-
-                        Register
-
-                    </button>
-
-                </form>
-
-                <hr>
-
-                <div class="text-center">
-
-                    Sudah punya akun?
-
-                    <a href="{{ route('login') }}">
-
-                        Login
-
-                    </a>
-
-                </div>
-
-            </div>
+            <input
+                type="text"
+                name="name"
+                class="form-control form-control-user"
+                placeholder="Masukkan nama lengkap"
+                required>
 
         </div>
+
+
+        <div class="form-group mb-3">
+
+            <label class="auth-label">
+                Email
+            </label>
+
+            <input
+                type="email"
+                name="email"
+                class="form-control form-control-user"
+                placeholder="Masukkan email"
+                required>
+
+        </div>
+
+
+        <div class="form-group mb-3">
+
+            <label class="auth-label">
+                Password
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                class="form-control form-control-user"
+                placeholder="Masukkan password"
+                required>
+
+        </div>
+
+
+        <div class="form-group mb-4">
+
+            <label class="auth-label">
+                Konfirmasi Password
+            </label>
+
+            <input
+                type="password"
+                name="password_confirmation"
+                class="form-control form-control-user"
+                placeholder="Ulangi password"
+                required>
+
+        </div>
+
+
+        <button type="submit" class="btn btn-register btn-block">
+
+            <i class="fas fa-user-plus"></i>
+            Register
+
+        </button>
+
+    </form>
+
+
+    <div class="text-center mt-4">
+
+        <span class="auth-link">
+            Sudah punya akun?
+        </span>
+
+        <a href="{{ route('login') }}" class="auth-link">
+
+            Login
+
+        </a>
 
     </div>
 

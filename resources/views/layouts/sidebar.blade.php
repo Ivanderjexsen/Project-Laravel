@@ -2,18 +2,23 @@
     id="accordionSidebar">
 
     <!-- Sidebar Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center"
-       href="{{ route('dashboard') }}">
+   <a class="sidebar-brand d-flex flex-column"
+   href="{{ route('dashboard') }}"
+   style="margin-bottom:70px;">
 
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-book"></i>
-        </div>
+    <div class="sidebar-brand-icon mb-3">
 
-        <div class="sidebar-brand-text mx-3">
-            Library Mini
-        </div>
+        <i class="fas fa-book"></i>
 
-    </a>
+    </div>
+
+    <div class="brand-title">
+
+        LIBRARY MINI
+
+    </div>
+
+</a>
 
     <hr class="sidebar-divider my-0">
 
