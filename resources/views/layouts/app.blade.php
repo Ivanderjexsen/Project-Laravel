@@ -2,8 +2,6 @@
 <html lang="en">
 
 <head>
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -11,30 +9,45 @@
     <title>@yield('title')</title>
 
     <!-- font poppins -->
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
-      rel="stylesheet">
-
-    <!--font awesome-->
-    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}"
-          rel="stylesheet">
-
-    <link href="{{ asset('css/sb-admin-2.min.css') }}"
-          rel="stylesheet">
-    
-    <link href="{{ asset('css/custom.css') }}"
-      rel="stylesheet">
+    <!-- Font Awesome -->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- SB Admin -->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <!-- SweetAlert2 CDN -->
+    <!-- Custom CSS -->
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    
+    <style>
+        html,
+        body {
+            height: auto !important;
+            min-height: 100%;
+            overflow-y: auto !important;
+        }
 
+        #wrapper {
+            min-height: 100vh;
+        }
+
+        #content-wrapper {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #content {
+            flex: 1 0 auto;
+        }
+    </style>
+
+    @stack('styles')
 </head>
 
 <body id="page-top">
@@ -52,9 +65,7 @@
                 @include('layouts.topbar')
 
                 <div class="container-fluid">
-
                     @yield('content')
-
                 </div>
 
             </div>
@@ -66,19 +77,30 @@
 
     </div>
 
+    <!-- Scroll To Top -->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <!-- jQuery -->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+
+    <!-- Bootstrap -->
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- jQuery Easing -->
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- SB Admin -->
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- SweetAlert Notifikasi -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Notifikasi Success (Toast)
+
             @if(session('success'))
             Swal.fire({
                 icon: 'success',
@@ -91,7 +113,6 @@
             });
             @endif
 
-            // Notifikasi Error (Toast)
             @if(session('error'))
             Swal.fire({
                 icon: 'error',
@@ -104,7 +125,6 @@
             });
             @endif
 
-            // Notifikasi Warning (Toast)
             @if(session('warning'))
             Swal.fire({
                 icon: 'warning',
@@ -116,9 +136,9 @@
                 position: 'top-end'
             });
             @endif
+
         });
 
-        // Fungsi SweetAlert Konfirmasi Hapus
         function confirmDelete(message, formId) {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
@@ -132,14 +152,12 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Submit form jika user klik "Ya, Hapus!"
                     document.getElementById(formId).submit();
                 } else {
-                    // Tampilkan notifikasi batal (opsional)
                     Swal.fire({
                         icon: 'info',
                         title: 'Dibatalkan',
-                        text: 'Penghapusan buku dibatalkan.',
+                        text: 'Penghapusan data dibatalkan.',
                         timer: 2000,
                         showConfirmButton: false,
                         toast: true,
@@ -150,9 +168,7 @@
         }
     </script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-@yield('script')
+    @yield('script')
     @stack('scripts')
 
 </body>
