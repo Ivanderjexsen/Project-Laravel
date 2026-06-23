@@ -211,3 +211,27 @@ body{
     }
 
 }
+
+/* Sidebar tetap */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 224px;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Area konten */
+#content-wrapper {
+    margin-left: 224px;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Matikan scroll body */
+body {
+    overflow: hidden;
+}
