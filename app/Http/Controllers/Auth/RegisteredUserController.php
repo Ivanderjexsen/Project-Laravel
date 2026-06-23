@@ -40,4 +40,5 @@ class RegisteredUserController extends Controller
         return redirect()->route('verification.notice')
             ->with('success', 'Akun berhasil dibuat! Silahkan cek email Anda untuk verifikasi.');
     }
+    
 }

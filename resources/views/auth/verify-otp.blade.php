@@ -101,6 +101,8 @@
                 }
             });
 
+
+            
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
                     inputs[index - 1].focus();

@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail  // ✅ TAMBAHKAN 
         'remember_token',
     ];
 
+    
     protected function casts(): array
     {
         return [

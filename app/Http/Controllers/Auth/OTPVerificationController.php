@@ -95,6 +95,7 @@ class OTPVerificationController extends Controller
         return back()->with('error', 'Kode OTP salah atau sudah kadaluarsa!');
     }
 
+    
     /**
      * Kirim ulang OTP
      */

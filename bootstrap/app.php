@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
             'can' => \Illuminate\Auth\Middleware\Authorize::class,
             
+            
             // ✅ PERBAIKI INI: RedirectIfAuthenticated (BUKAN RedirectAuthenticated)
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             

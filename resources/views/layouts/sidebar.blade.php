@@ -22,6 +22,7 @@
         @if(Auth::user()->role === 'admin')
             <hr class="sidebar-divider">
 
+            
             <div class="sidebar-heading">
                 MASTER DATA
             </div>
