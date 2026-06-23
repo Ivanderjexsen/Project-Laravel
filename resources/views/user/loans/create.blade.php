@@ -30,8 +30,7 @@
                                 <option value="">-- Pilih Buku --</option>
                                 @foreach($bukus as $buku)
                                 @php
-                                $dipinjam = App\Models\Loan::where('buku', $buku->judul_buku)->where('status', 'Dipinjam')->count();
-                                $stokTersedia = $buku->stok - $dipinjam;
+                                $stokTersedia = $buku->getStokTersedia();
                                 @endphp
                                 <option value="{{ $buku->id }}"
                                     {{ old('buku_id') == $buku->id ? 'selected' : '' }}>
@@ -49,6 +48,11 @@
                             <label class="form-label">Tanggal Pinjam</label>
                             <input type="text" class="form-control" value="{{ now()->format('d-m-Y') }}" disabled>
                             <small class="text-muted">Tanggal pinjam otomatis hari ini</small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <small>Denda Rp 2.000/hari jika terlambat mengembalikan.</small>
                         </div>
 
                         <div class="d-flex justify-content-between">

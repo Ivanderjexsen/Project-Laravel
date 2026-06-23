@@ -66,11 +66,19 @@
         MENU USER
     </div>
 
+
+    <li class="nav-item {{ request()->routeIs('user.buku.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.buku.index') }}">
+            <i class="fas fa-fw fa-book"></i>
+            <span>Data Buku</span>
+        </a>
+    </li>
+
     <!-- Histori Peminjaman Saya (User) -->
     <li class="nav-item {{ request()->routeIs('user.loans.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.loans.index') }}">
             <i class="fas fa-fw fa-handshake"></i>
-            <span>Histori Peminjaman</span>
+            <span>Data Peminjaman</span>
         </a>
     </li>
     @endif

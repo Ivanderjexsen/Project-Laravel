@@ -7,18 +7,15 @@ use App\Models\Buku;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class UserLoanController extends Controller
 {
-    /**
-     * Display a listing of user's own loans (HISTORY).
-     */
     public function index(Request $request)
     {
         $user = Auth::user();
         $status = $request->input('status');
 
-        // Query hanya untuk user yang login
         $query = Loan::where('peminjam', $user->name);
 
         if ($status) {
@@ -27,7 +24,6 @@ class UserLoanController extends Controller
 
         $loans = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        // Statistik user
         $totalPinjam = Loan::where('peminjam', $user->name)->count();
         $totalDipinjam = Loan::where('peminjam', $user->name)->where('status', 'Dipinjam')->count();
         $totalDikembalikan = Loan::where('peminjam', $user->name)->where('status', 'Dikembalikan')->count();
@@ -35,20 +31,19 @@ class UserLoanController extends Controller
         return view('user.loans.index', compact('loans', 'status', 'totalPinjam', 'totalDipinjam', 'totalDikembalikan'));
     }
 
-    /**
-     * Show the form for creating a new loan.
-     */
     public function create()
     {
         $bukus = Buku::where('stok', '>', 0)->orderBy('judul_buku')->get();
         return view('user.loans.create', compact('bukus'));
     }
 
-    /**
-     * Store a newly created loan.
-     */
     public function store(Request $request)
     {
+        Log::info('========================================');
+        Log::info('📌 PROSES PEMINJAMAN DIMULAI');
+        Log::info('📌 User: ' . Auth::user()->name);
+        Log::info('========================================');
+
         $validator = Validator::make($request->all(), [
             'buku_id' => 'required|exists:bukus,id',
         ]);
@@ -61,8 +56,10 @@ class UserLoanController extends Controller
 
         $buku = Buku::findOrFail($request->buku_id);
 
-        // Cek stok
-        if ($buku->getStokTersedia() <= 0) {
+        // Cek stok tersedia
+        $stokTersedia = $buku->getStokTersedia();
+
+        if ($stokTersedia <= 0) {
             return redirect()->back()
                 ->with('error', 'Stok buku "' . $buku->judul_buku . '" sedang habis!')
                 ->withInput();
@@ -80,6 +77,13 @@ class UserLoanController extends Controller
                 ->withInput();
         }
 
+        Log::info('📌 Buku: ' . $buku->judul_buku);
+        Log::info('📌 Total Stok: ' . $buku->stok);
+        Log::info('📌 Stok Tersedia SEBELUM: ' . $buku->getStokTersedia());
+
+        // === JANGAN KURANGI TOTAL STOK ===
+        // Total stok TETAP, stok tersedia dihitung dari total - dipinjam
+
         // Buat peminjaman
         $loan = Loan::create([
             'peminjam' => Auth::user()->name,
@@ -88,16 +92,17 @@ class UserLoanController extends Controller
             'status' => 'Dipinjam',
         ]);
 
+        Log::info('📌 Total Stok SETELAH: ' . $buku->stok . ' (TETAP)');
+        Log::info('📌 Stok Tersedia SETELAH: ' . $buku->getStokTersedia());
+        Log::info('📌 Peminjaman ID: ' . $loan->id);
+        Log::info('========================================');
+
         return redirect()->route('user.loans.index')
-            ->with('success', "Buku '{$buku->judul_buku}' berhasil dipinjam!");
+            ->with('success', "Buku '{$buku->judul_buku}' berhasil dipinjam! Stok tersisa: {$buku->getStokTersedia()}");
     }
 
-    /**
-     * Display the specified loan (HISTORY DETAIL).
-     */
     public function show($id)
     {
-        // Ambil data loan milik user yang login
         $loan = Loan::where('id', $id)
             ->where('peminjam', Auth::user()->name)
             ->firstOrFail();
@@ -105,11 +110,13 @@ class UserLoanController extends Controller
         return view('user.loans.detail', compact('loan'));
     }
 
-    /**
-     * Return book (User only).
-     */
     public function returnBook($id)
     {
+        Log::info('========================================');
+        Log::info('📌 PROSES PENGEMBALIAN DIMULAI');
+        Log::info('📌 User: ' . Auth::user()->name);
+        Log::info('========================================');
+
         $loan = Loan::where('id', $id)
             ->where('peminjam', Auth::user()->name)
             ->firstOrFail();
@@ -119,17 +126,34 @@ class UserLoanController extends Controller
                 ->with('error', 'Buku ini sudah dikembalikan!');
         }
 
+        Log::info('📌 Buku: ' . $loan->buku);
+
+        $buku = Buku::where('judul_buku', $loan->buku)->first();
+
+        if ($buku) {
+            Log::info('📌 Total Stok SEBELUM: ' . $buku->stok . ' (TETAP)');
+            Log::info('📌 Stok Tersedia SEBELUM: ' . $buku->getStokTersedia());
+        }
+
+        // === JANGAN TAMBAH TOTAL STOK ===
+        // Total stok TETAP
+
         $loan->update([
             'status' => 'Dikembalikan',
         ]);
 
+        if ($buku) {
+            Log::info('📌 Total Stok SETELAH: ' . $buku->stok . ' (TETAP)');
+            Log::info('📌 Stok Tersedia SETELAH: ' . $buku->getStokTersedia());
+        }
+
+        Log::info('📌 Status diubah menjadi Dikembalikan');
+        Log::info('========================================');
+
         return redirect()->route('user.loans.index')
-            ->with('success', 'Buku berhasil dikembalikan!');
+            ->with('success', "Buku '{$loan->buku}' berhasil dikembalikan!");
     }
 
-    /**
-     * Get loan history for a specific user (for admin view).
-     */
     public function getUserHistory($userId)
     {
         $user = \App\Models\User::findOrFail($userId);

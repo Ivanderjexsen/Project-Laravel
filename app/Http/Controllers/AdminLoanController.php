@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\Buku;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,9 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminLoanController extends Controller
 {
-    /**
-     * Display a listing of all loans (Admin view all users).
-     */
     public function index(Request $request)
     {
         $status = $request->input('status');
@@ -55,14 +53,14 @@ class AdminLoanController extends Controller
             $counts = [0];
         }
 
-        return view('loans.index', compact('loans', 'status', 'userFilter', 'users', 'totalPinjam', 'totalDipinjam', 'totalDikembalikan', 'months', 'counts'));
+        return view('admin.loans.index', compact('loans', 'status', 'userFilter', 'users', 'totalPinjam', 'totalDipinjam', 'totalDikembalikan', 'months', 'counts'));
     }
 
     public function edit($id)
     {
         $loan = Loan::findOrFail($id);
         $users = User::all();
-        return view('loans.edit', compact('loan', 'users'));
+        return view('admin.loans.edit', compact('loan', 'users'));
     }
 
     public function update(Request $request, $id)
@@ -82,6 +80,8 @@ class AdminLoanController extends Controller
                 ->withInput();
         }
 
+        $oldStatus = $loan->status;
+
         $loan->update([
             'peminjam' => $request->peminjam,
             'buku' => $request->buku,
@@ -89,7 +89,19 @@ class AdminLoanController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('loans.index')
+        // === UPDATE STOK TOTAL ===
+        if ($oldStatus !== $request->status) {
+            $buku = Buku::where('judul_buku', $request->buku)->first();
+            if ($buku) {
+                if ($request->status === 'Dikembalikan' && $oldStatus === 'Dipinjam') {
+                    $buku->tambahStok();  // ✅ TAMBAH STOK TOTAL
+                } elseif ($request->status === 'Dipinjam' && $oldStatus === 'Dikembalikan') {
+                    $buku->kurangiStok();  // ✅ KURANGI STOK TOTAL
+                }
+            }
+        }
+
+        return redirect()->route('admin.loans.index')
             ->with('success', 'Data peminjaman berhasil diperbarui!');
     }
 
@@ -107,20 +119,43 @@ class AdminLoanController extends Controller
                 ->withInput();
         }
 
+        $oldStatus = $loan->status;
+
         $loan->update([
             'status' => $request->status,
         ]);
 
-        return redirect()->route('loans.index')
+        // === UPDATE STOK TOTAL ===
+        if ($oldStatus !== $request->status) {
+            $buku = Buku::where('judul_buku', $loan->buku)->first();
+            if ($buku) {
+                if ($request->status === 'Dikembalikan' && $oldStatus === 'Dipinjam') {
+                    $buku->tambahStok();  // ✅ TAMBAH STOK TOTAL
+                } elseif ($request->status === 'Dipinjam' && $oldStatus === 'Dikembalikan') {
+                    $buku->kurangiStok();  // ✅ KURANGI STOK TOTAL
+                }
+            }
+        }
+
+        return redirect()->route('admin.loans.index')
             ->with('success', 'Status peminjaman berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         $loan = Loan::findOrFail($id);
+
+        // === KEMBALIKAN STOK TOTAL ===
+        if ($loan->status === 'Dipinjam') {
+            $buku = Buku::where('judul_buku', $loan->buku)->first();
+            if ($buku) {
+                $buku->tambahStok();  // ✅ TAMBAH STOK TOTAL
+            }
+        }
+
         $loan->delete();
 
-        return redirect()->route('loans.index')
+        return redirect()->route('admin.loans.index')
             ->with('success', 'Data peminjaman berhasil dihapus!');
     }
 
@@ -131,6 +166,6 @@ class AdminLoanController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('users.history', compact('user', 'loans'));
+        return view('admin.users.history', compact('user', 'loans'));
     }
 }

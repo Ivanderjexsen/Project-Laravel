@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\book\BukuController;
+use App\Http\Controllers\book\UserBukuController;
 use App\Http\Controllers\ProfileController;  // ✅ TAMBAHKAN INI
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserLoanController;
@@ -133,6 +134,14 @@ Route::prefix('user/loans')->name('user.loans.')->middleware('auth')->group(func
     Route::post('/', [UserLoanController::class, 'store'])->name('store');
     Route::get('/{id}', [UserLoanController::class, 'show'])->name('show');
     Route::put('/{id}/return', [UserLoanController::class, 'returnBook'])->name('return');
+});
+
+// ==========================================
+// ROUTE USER BUKU (Untuk User Lihat Buku)
+// ==========================================
+Route::prefix('user/books')->name('user.buku.')->middleware('auth')->group(function () {
+    Route::get('/', [UserBukuController::class, 'index'])->name('index');
+    Route::get('/{id}', [UserBukuController::class, 'show'])->name('show');
 });
 
 // ============================================

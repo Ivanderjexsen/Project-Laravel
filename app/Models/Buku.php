@@ -4,19 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Buku extends Model
 {
     use HasFactory;
 
-    protected $table = 'bukus'; // ← TAMBAHKAN INI
+    protected $table = 'bukus';
 
     protected $fillable = [
         'kode_buku',
         'judul_buku',
         'pengarang',
         'penerbit',
-        'stok'
+        'stok'  // Ini adalah TOTAL STOK (tetap)
     ];
 
     protected $casts = [
@@ -42,6 +43,35 @@ class Buku extends Model
     public function isAvailable()
     {
         return $this->getStokTersedia() > 0;
+    }
+
+    // === KURANGI STOK ===
+    public function kurangiStok()
+    {
+        Log::info('📌 kurangiStok dipanggil untuk: ' . $this->judul_buku);
+        Log::info('📌 Stok SEBELUM: ' . $this->stok);
+
+        // ❌ HAPUS INI - JANGAN KURANGI TOTAL STOK
+        // $this->decrement('stok');
+
+        // ✅ TOTAL STOK TETAP, TIDAK BERKURANG
+        // Stok tersedia akan dihitung dari total stok - dipinjam
+
+        Log::info('📌 Stok TETAP: ' . $this->stok);
+        return true;
+    }
+
+    public function tambahStok()
+    {
+        Log::info('📌 tambahStok dipanggil untuk: ' . $this->judul_buku);
+        Log::info('📌 Stok SEBELUM: ' . $this->stok);
+
+        // ❌ HAPUS INI - JANGAN TAMBAH TOTAL STOK
+        // $this->increment('stok');
+
+        // ✅ TOTAL STOK TETAP, TIDAK BERTAMBAH
+        Log::info('📌 Stok TETAP: ' . $this->stok);
+        return true;
     }
 
     // === BOOT ===

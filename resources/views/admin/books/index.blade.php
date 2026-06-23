@@ -46,12 +46,18 @@
                                     <th>Judul Buku</th>
                                     <th>Pengarang</th>
                                     <th>Penerbit</th>
-                                    <th>Stok</th>
+                                    <th>Total Stok</th>
+                                    <th>Stok Tersedia</th>
+                                    <th>Dipinjam</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($bukus as $index => $buku)
+                                @php
+                                $dipinjam = App\Models\Loan::where('buku', $buku->judul_buku)->where('status', 'Dipinjam')->count();
+                                $stokTersedia = $buku->stok - $dipinjam;
+                                @endphp
                                 <tr>
                                     <td>{{ $bukus->firstItem() + $index }}</td>
                                     <td><span class="badge bg-primary">{{ $buku->kode_buku }}</span></td>
@@ -59,6 +65,20 @@
                                     <td>{{ $buku->pengarang }}</td>
                                     <td>{{ $buku->penerbit }}</td>
                                     <td>{{ $buku->stok }}</td>
+                                    <td>
+                                        @if($stokTersedia > 0)
+                                        <span class="badge bg-success">{{ $stokTersedia }}</span>
+                                        @else
+                                        <span class="badge bg-danger">0</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($dipinjam > 0)
+                                        <span class="badge bg-warning text-dark">{{ $dipinjam }}</span>
+                                        @else
+                                        <span class="badge bg-secondary">0</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
                                             <a href="{{ route('buku.show', $buku->id) }}"
@@ -83,7 +103,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">Tidak ada data buku</td>
+                                    <td colspan="9" class="text-center">Tidak ada data buku</td>
                                 </tr>
                                 @endforelse
                             </tbody>
