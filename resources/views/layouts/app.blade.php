@@ -102,7 +102,7 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: "{{ session('success') }}",
+                text: @json(session('success')),
                 timer: 3000,
                 showConfirmButton: false,
                 toast: true,
@@ -114,7 +114,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal!',
-                text: "{{ session('error') }}",
+                text: @json(session('error')),
                 timer: 5000,
                 showConfirmButton: false,
                 toast: true,
@@ -126,7 +126,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Peringatan!',
-                text: "{{ session('warning') }}",
+                text: @json(session('warning')),
                 timer: 4000,
                 showConfirmButton: false,
                 toast: true,

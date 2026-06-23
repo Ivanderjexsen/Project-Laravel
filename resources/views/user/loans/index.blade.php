@@ -95,9 +95,9 @@
                                     <td>{{ $loan->tanggal_pinjam ? $loan->tanggal_pinjam->format('d-m-Y') : '-' }}</td>
                                     <td>
                                         @if($loan->status == 'Dipinjam')
-                                        <span class="badge bg-primary">Dipinjam</span>
+                                        <span class="badge bg-primary loan-status-badge">Dipinjam</span>
                                         @else
-                                        <span class="badge bg-success">Dikembalikan</span>
+                                        <span class="badge bg-success loan-status-badge">Dikembalikan</span>
                                         @endif
                                     </td>
                                     <td>

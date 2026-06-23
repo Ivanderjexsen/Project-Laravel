@@ -37,9 +37,9 @@
                             <th>Role</th>
                             <td>
                                 @if($user->role == 'admin')
-                                <span class="badge bg-danger">Admin</span>
+                                <span class="badge bg-danger role-status-badge">Admin</span>
                                 @else
-                                <span class="badge bg-info">User</span>
+                                <span class="badge bg-info role-status-badge">User</span>
                                 @endif
                             </td>
                         </tr>

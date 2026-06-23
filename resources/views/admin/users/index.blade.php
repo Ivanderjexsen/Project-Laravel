@@ -111,9 +111,9 @@
                                     <td>{{ $user->email }}</td>
                                     <td>
                                         @if($user->role == 'admin')
-                                        <span class="badge bg-danger">Admin</span>
+                                        <span class="badge bg-danger role-status-badge">Admin</span>
                                         @else
-                                        <span class="badge bg-info">User</span>
+                                        <span class="badge bg-info role-status-badge">User</span>
                                         @endif
                                     </td>
                                     <td>{{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}</td>

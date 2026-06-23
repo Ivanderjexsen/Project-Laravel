@@ -47,7 +47,10 @@ class BukuController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'buku_id' => 'required|exists:buku,id',
+            'judul_buku' => 'required|string|max:255',
+            'pengarang' => 'required|string|max:100',
+            'penerbit' => 'required|string|max:100',
+            'stok' => 'required|integer|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -56,43 +59,16 @@ class BukuController extends Controller
                 ->withInput();
         }
 
-        $buku = Buku::findOrFail($request->buku_id);
-
-        // Cek stok - HITUNG MANUAL
-        $dipinjam = Loan::where('buku', $buku->judul_buku)
-            ->where('status', 'Dipinjam')
-            ->count();
-
-        $stokTersedia = $buku->stok - $dipinjam;
-
-        if ($stokTersedia <= 0) {
+        if (Buku::isBukuExists($request->judul_buku, $request->pengarang, $request->penerbit)) {
             return redirect()->back()
-                ->with('error', 'Stok buku "' . $buku->judul_buku . '" sedang habis!')
+                ->with('error', 'Buku dengan judul "' . $request->judul_buku . '" oleh "' . $request->pengarang . '" dan penerbit "' . $request->penerbit . '" sudah ada di database!')
                 ->withInput();
         }
 
-        // Cek apakah user sudah meminjam buku ini
-        $existing = Loan::where('peminjam', Auth::user()->name)
-            ->where('buku', $buku->judul_buku)
-            ->where('status', 'Dipinjam')
-            ->first();
+        Buku::create($validator->validated());
 
-        if ($existing) {
-            return redirect()->back()
-                ->with('error', 'Anda sudah meminjam buku "' . $buku->judul_buku . '" ini!')
-                ->withInput();
-        }
-
-        // Buat peminjaman
-        $loan = Loan::create([
-            'peminjam' => Auth::user()->name,
-            'buku' => $buku->judul_buku,
-            'tanggal_pinjam' => now(),
-            'status' => 'Dipinjam',
-        ]);
-
-        return redirect()->route('user.loans.index')
-            ->with('success', "Buku '{$buku->judul_buku}' berhasil dipinjam!");
+        return redirect()->route('buku.index')
+            ->with('success', "Buku '{$request->judul_buku}' berhasil ditambahkan!");
     }
 
     /**

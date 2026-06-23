@@ -66,14 +66,6 @@
         MENU USER
     </div>
 
-    <!-- Data Buku (User hanya lihat) -->
-    <li class="nav-item {{ request()->routeIs('buku.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('buku.index') }}">
-            <i class="fas fa-fw fa-book"></i>
-            <span>Data Buku</span>
-        </a>
-    </li>
-
     <!-- Histori Peminjaman Saya (User) -->
     <li class="nav-item {{ request()->routeIs('user.loans.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.loans.index') }}">
@@ -90,10 +82,6 @@
     <li class="nav-item">
         <form action="{{ route('logout') }}" method="POST">
             @csrf
-            <button type="submit" class="nav-link border-0 bg-transparent text-white w-100 text-start">
-                <i class="fas fa-fw fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </button>
         </form>
     </li>
 

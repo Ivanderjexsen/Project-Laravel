@@ -256,3 +256,10 @@ body {
 body {
     overflow: hidden;
 }
+
+/* Loan and role badge text color */
+.loan-status-badge,
+.role-status-badge {
+    color: #ffffff !important;
+    font-weight: 600;
+}
