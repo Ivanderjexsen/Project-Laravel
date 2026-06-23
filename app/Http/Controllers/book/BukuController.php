@@ -1,19 +1,18 @@
 <?php
-// app/Http/Controllers/book/BukuController.php
 
 namespace App\Http\Controllers\book;
 
 use App\Models\Buku;
 use App\Http\Controllers\Controller;
-use App\Services\OpenLibraryService;  // ← TAMBAHKAN INI
+use App\Services\OpenLibraryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class BukuController extends Controller
 {
-    protected OpenLibraryService $openLibrary;  // ← TAMBAHKAN INI
+    protected OpenLibraryService $openLibrary;
 
-    public function __construct(OpenLibraryService $openLibrary)  // ← TAMBAHKAN INI
+    public function __construct(OpenLibraryService $openLibrary)
     {
         $this->openLibrary = $openLibrary;
     }
@@ -48,10 +47,7 @@ class BukuController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'judul_buku' => 'required|string|max:255',
-            'pengarang' => 'required|string|max:100',
-            'penerbit' => 'required|string|max:100',
-            'stok' => 'required|integer|min:0'
+            'buku_id' => 'required|exists:buku,id',
         ]);
 
         if ($validator->fails()) {
@@ -60,17 +56,43 @@ class BukuController extends Controller
                 ->withInput();
         }
 
-        // CEK DUPLIKAT: Cek apakah buku sudah ada
-        if (Buku::isBukuExists($request->judul_buku, $request->pengarang, $request->penerbit)) {
+        $buku = Buku::findOrFail($request->buku_id);
+
+        // Cek stok - HITUNG MANUAL
+        $dipinjam = Loan::where('buku', $buku->judul_buku)
+            ->where('status', 'Dipinjam')
+            ->count();
+
+        $stokTersedia = $buku->stok - $dipinjam;
+
+        if ($stokTersedia <= 0) {
             return redirect()->back()
-                ->with('error', 'Buku dengan judul "' . $request->judul_buku . '" oleh "' . $request->pengarang . '" sudah ada di database!')
+                ->with('error', 'Stok buku "' . $buku->judul_buku . '" sedang habis!')
                 ->withInput();
         }
 
-        $buku = Buku::create($request->all());
+        // Cek apakah user sudah meminjam buku ini
+        $existing = Loan::where('peminjam', Auth::user()->name)
+            ->where('buku', $buku->judul_buku)
+            ->where('status', 'Dipinjam')
+            ->first();
 
-        return redirect()->route('buku.index')
-            ->with('success', "Buku '{$buku->judul_buku}' berhasil ditambahkan! (Kode: {$buku->kode_buku})");
+        if ($existing) {
+            return redirect()->back()
+                ->with('error', 'Anda sudah meminjam buku "' . $buku->judul_buku . '" ini!')
+                ->withInput();
+        }
+
+        // Buat peminjaman
+        $loan = Loan::create([
+            'peminjam' => Auth::user()->name,
+            'buku' => $buku->judul_buku,
+            'tanggal_pinjam' => now(),
+            'status' => 'Dipinjam',
+        ]);
+
+        return redirect()->route('user.loans.index')
+            ->with('success', "Buku '{$buku->judul_buku}' berhasil dipinjam!");
     }
 
     /**
@@ -111,7 +133,7 @@ class BukuController extends Controller
 
         $buku = Buku::findOrFail($id);
 
-        // CEK DUPLIKAT: Cek apakah buku sudah ada (kecuali dirinya sendiri)
+        // CEK DUPLIKAT
         if (Buku::isBukuExists($request->judul_buku, $request->pengarang, $request->penerbit, $id)) {
             return redirect()->back()
                 ->with('error', 'Buku dengan judul "' . $request->judul_buku . '" oleh "' . $request->pengarang . '" sudah ada di database!')

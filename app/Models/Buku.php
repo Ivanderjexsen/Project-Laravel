@@ -9,7 +9,10 @@ class Buku extends Model
 {
     use HasFactory;
 
+    protected $table = 'bukus'; // ← TAMBAHKAN INI
+
     protected $fillable = [
+        'kode_buku',
         'judul_buku',
         'pengarang',
         'penerbit',
@@ -20,30 +23,28 @@ class Buku extends Model
         'stok' => 'integer',
     ];
 
-    public function scopeSearch($query, $keyword)
+    // === RELATIONSHIPS ===
+    public function peminjaman()
     {
-        return $query->where('judul_buku', 'like', "%{$keyword}%")
-            ->orWhere('pengarang', 'like', "%{$keyword}%")
-            ->orWhere('penerbit', 'like', "%{$keyword}%")
-            ->orWhere('kode_buku', 'like', "%{$keyword}%");
+        return $this->hasMany(Loan::class, 'buku', 'judul_buku');
     }
 
-    /**
-     * Cek apakah buku sudah ada (duplikat)
-     */
-    public static function isBukuExists($judul_buku, $pengarang, $penerbit, $excludeId = null)
+    // === STOK METHODS ===
+    public function getStokTersedia()
     {
-        $query = self::where('judul_buku', $judul_buku)
-            ->where('pengarang', $pengarang)
-            ->where('penerbit', $penerbit);
+        $dipinjam = Loan::where('buku', $this->judul_buku)
+            ->where('status', 'Dipinjam')
+            ->count();
 
-        if ($excludeId) {
-            $query->where('id', '!=', $excludeId);
-        }
-
-        return $query->exists();
+        return $this->stok - $dipinjam;
     }
 
+    public function isAvailable()
+    {
+        return $this->getStokTersedia() > 0;
+    }
+
+    // === BOOT ===
     protected static function boot()
     {
         parent::boot();
@@ -64,13 +65,35 @@ class Buku extends Model
             ->first();
 
         if ($lastBuku) {
-            $lastCode = $lastBuku->kode_buku;
-            $lastNumber = (int) substr($lastCode, -3);
+            $lastNumber = (int) substr($lastBuku->kode_buku, -3);
             $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
         } else {
             $newNumber = '001';
         }
 
         return "B-{$tahunBulan}-{$newNumber}";
+    }
+
+    // === SCOPES ===
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('judul_buku', 'like', "%{$keyword}%")
+            ->orWhere('pengarang', 'like', "%{$keyword}%")
+            ->orWhere('penerbit', 'like', "%{$keyword}%")
+            ->orWhere('kode_buku', 'like', "%{$keyword}%");
+    }
+
+    // === METHODS ===
+    public static function isBukuExists($judul_buku, $pengarang, $penerbit, $excludeId = null)
+    {
+        $query = self::where('judul_buku', $judul_buku)
+            ->where('pengarang', $pengarang)
+            ->where('penerbit', $penerbit);
+
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return $query->exists();
     }
 }
