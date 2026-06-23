@@ -2,55 +2,20 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title')</title>
+    <title>@yield('title', 'LIBRARY MINI')</title>
 
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}"
-        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- SB Admin -->
-    <link href="{{ asset('css/sb-admin-2.min.css') }}"
-        rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="{{ asset('css/custom.css') }}"
-        rel="stylesheet">
-
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <style>
-        html,
-        body {
-            height: auto !important;
-            min-height: 100%;
-            overflow-y: auto !important;
-        }
-
-        #wrapper {
-            min-height: 100vh;
-        }
-
-        #content-wrapper {
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        #content {
-            flex: 1 0 auto;
-        }
-    </style>
+    <!-- SB Admin 2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
 
     @stack('styles')
 </head>
@@ -59,123 +24,79 @@
 
     <div id="wrapper">
 
-        {{-- Sidebar --}}
+        <!-- Sidebar -->
         @include('layouts.sidebar')
 
         <div id="content-wrapper" class="d-flex flex-column">
 
             <div id="content">
 
-                {{-- Topbar --}}
+                <!-- Topbar -->
                 @include('layouts.topbar')
 
+                <!-- Main Content -->
                 <div class="container-fluid">
                     @yield('content')
                 </div>
 
             </div>
 
-            {{-- Footer --}}
+            <!-- Footer -->
             @include('layouts.footer')
 
         </div>
 
     </div>
 
-    <!-- Scroll To Top -->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT (WAJIB UNTUK DROPDOWN)          -->
+    <!-- ========================================== -->
     <!-- jQuery -->
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Bootstrap -->
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Bootstrap Bundle JS (dengan Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- jQuery Easing -->
-    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <!-- SB Admin 2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/js/sb-admin-2.min.js"></script>
 
-    <!-- SB Admin -->
-    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
-
-    <!-- SweetAlert Notifikasi -->
+    <!-- ========================================== -->
+    <!-- SCRIPT UNTUK DROPDOWN (MANUAL)             -->
+    <!-- ========================================== -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
+            // Inisialisasi dropdown manual
+            $('.dropdown-toggle').dropdown();
 
-            @if(session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: "{{ session('success') }}",
-                    timer: 3000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end'
-                });
-            @endif
-
-            @if(session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: "{{ session('error') }}",
-                    timer: 5000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end'
-                });
-            @endif
-
-            @if(session('warning'))
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan!',
-                    text: "{{ session('warning') }}",
-                    timer: 4000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end'
-                });
-            @endif
-
+            // Atau jika pakai data-toggle
+            $('[data-toggle="dropdown"]').on('click', function(e) {
+                e.preventDefault();
+                var $dropdown = $(this).next('.dropdown-menu');
+                $dropdown.toggleClass('show');
+                $(this).attr('aria-expanded', $dropdown.hasClass('show'));
+            });
         });
 
-        function confirmDelete(message, formId) {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: message || 'Data yang dihapus tidak dapat dikembalikan!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById(formId).submit();
-                } else {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Dibatalkan',
-                        text: 'Penghapusan data dibatalkan.',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        toast: true,
-                        position: 'top-end'
-                    });
-                }
+        // Alternatif: Pakai vanilla JS
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdownToggles = document.querySelectorAll('[data-toggle="dropdown"]');
+            dropdownToggles.forEach(function(toggle) {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var menu = this.nextElementSibling;
+                    if (menu.classList.contains('show')) {
+                        menu.classList.remove('show');
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        menu.classList.add('show');
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
             });
-        }
+        });
     </script>
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    @yield('script')
     @stack('scripts')
-
 </body>
 
 </html>

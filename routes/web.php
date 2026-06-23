@@ -3,42 +3,64 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\book\BukuController;
+use App\Http\Controllers\BukuController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ProfileController;  // ✅ TAMBAHKAN INI
 
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect()->route('login');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
 
+    // ============================================
+    // DASHBOARD
+    // ============================================
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Route untuk Buku
-    Route::get('/books', [BookController::class, 'index'])->name('books.index');
-    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
-    Route::get('/books/edit', [BookController::class, 'edit'])->name('books.edit');
-    // Tambahkan POST, PUT, DELETE untuk buku nanti
+    // ============================================
+    // ROUTE PROFILE
+    // ============================================
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-   // Route untuk peminjaman (lengkap)
-Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
-Route::get('/loans/create', [LoanController::class, 'create'])->name('loans.create');
-Route::post('/loans', [LoanController::class, 'store'])->name('loans.store');
-Route::get('/loans/{id}', [LoanController::class, 'show'])->name('loans.show');
-Route::get('/loans/{id}/edit', [LoanController::class, 'edit'])->name('loans.edit');
-Route::put('/loans/{id}', [LoanController::class, 'update'])->name('loans.update');
-Route::delete('/loans/{id}', [LoanController::class, 'destroy'])->name('loans.destroy');
-    // Nanti tambahkan route untuk update & delete
+    // ============================================
+    // ROUTE BUKU - PAKAI BookController
+    // ============================================
+    Route::prefix('books')->name('books.')->group(function () {
+        Route::get('/', [BookController::class, 'index'])->name('index');
+        Route::get('/create', [BookController::class, 'create'])->name('create');
+        Route::post('/', [BookController::class, 'store'])->name('store');
+        Route::get('/{id}', [BookController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [BookController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [BookController::class, 'update'])->name('update');
+        Route::delete('/{id}', [BookController::class, 'destroy'])->name('destroy');
+    });
+
+    // ============================================
+    // ROUTE BUKU - PAKAI BukuController (ADMIN ONLY)
+    // ============================================
+    Route::middleware(['admin'])->group(function () {
+        Route::resource('buku', BukuController::class);
+    });
+
+    // ============================================
+    // ROUTE PEMINJAMAN (ADMIN ONLY)
+    // ============================================
+    Route::middleware(['admin'])->group(function () {
+        Route::resource('loans', LoanController::class);
+    });
+
+    // ============================================
+    // ROUTE RIWAYAT (SEMUA USER)
+    // ============================================
+    Route::get('/history', [LoanController::class, 'history'])->name('history.index');
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
-
-
-
-//book
-Route::get('/', function () {
-    return redirect()->route('buku.index');
-});
-
-// Route resource untuk CRUD Buku
-Route::resource('buku', BukuController::class);
 
 require __DIR__ . '/auth.php';
