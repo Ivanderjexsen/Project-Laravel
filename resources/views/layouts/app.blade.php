@@ -10,7 +10,6 @@
 
     <title>@yield('title')</title>
 
-<<<<<<< HEAD
     <!-- font poppins -->
      <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -28,13 +27,13 @@
     
     <link href="{{ asset('css/custom.css') }}"
       rel="stylesheet">
-=======
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
->>>>>>> 9caddb6 (feat : books)
+
+    
 
 </head>
 
@@ -151,13 +150,10 @@
         }
     </script>
 
-<<<<<<< HEAD
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 @yield('script')
-=======
     @stack('scripts')
->>>>>>> 9caddb6 (feat : books)
 
 </body>
 

@@ -1,14 +1,23 @@
 <?php
+// app/Http/Controllers/book/BukuController.php
 
 namespace App\Http\Controllers\book;
 
 use App\Models\Buku;
 use App\Http\Controllers\Controller;
+use App\Services\OpenLibraryService;  // ← TAMBAHKAN INI
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class BukuController extends Controller
 {
+    protected OpenLibraryService $openLibrary;  // ← TAMBAHKAN INI
+
+    public function __construct(OpenLibraryService $openLibrary)  // ← TAMBAHKAN INI
+    {
+        $this->openLibrary = $openLibrary;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +31,7 @@ class BukuController extends Controller
             $bukus = Buku::orderBy('created_at', 'desc')->paginate(10);
         }
 
-        return view('books.index', compact('bukus', 'keyword'));
+        return view('admin.books.index', compact('bukus', 'keyword'));
     }
 
     /**
@@ -30,7 +39,7 @@ class BukuController extends Controller
      */
     public function create()
     {
-        return view('books.create');
+        return view('admin.books.create');
     }
 
     /**
@@ -70,7 +79,7 @@ class BukuController extends Controller
     public function show($id)
     {
         $buku = Buku::findOrFail($id);
-        return view('books.detail', compact('buku'));
+        return view('admin.books.detail', compact('buku'));
     }
 
     /**
@@ -79,7 +88,7 @@ class BukuController extends Controller
     public function edit($id)
     {
         $buku = Buku::findOrFail($id);
-        return view('books.edit', compact('buku'));
+        return view('admin.books.edit', compact('buku'));
     }
 
     /**
@@ -126,5 +135,22 @@ class BukuController extends Controller
 
         return redirect()->route('buku.index')
             ->with('success', "Buku '{$judul}' berhasil dihapus!");
+    }
+
+    /**
+     * Search books from OpenLibrary API
+     */
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+
+        if (strlen($query) < 2) {
+            return response()->json(['docs' => []]);
+        }
+
+        // Panggil service OpenLibrary
+        $result = $this->openLibrary->searchBooks($query, 5);
+
+        return response()->json($result);
     }
 }
