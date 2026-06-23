@@ -123,7 +123,6 @@
             </table>
         </div>
 
-        <!-- Tombol Aksi -->
         <div class="d-flex gap-2 mt-3">
             <a href="{{ route('buku.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Kembali

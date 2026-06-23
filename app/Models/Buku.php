@@ -28,9 +28,7 @@ class Buku extends Model
             ->orWhere('kode_buku', 'like', "%{$keyword}%");
     }
 
-    /**
-     * Cek apakah buku sudah ada (duplikat)
-     */
+    
     public static function isBukuExists($judul_buku, $pengarang, $penerbit, $excludeId = null)
     {
         $query = self::where('judul_buku', $judul_buku)

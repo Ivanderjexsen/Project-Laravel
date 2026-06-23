@@ -1,109 +1,84 @@
 @extends('layouts.guest')
 
-@section('title','Login')
+@section('title', 'Login')
 
 @section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </h4>
+                </div>
+                <div class="card-body p-4">
 
-<!-- Bola Background -->
-<div class="circle circle1"></div>
-<div class="circle circle2"></div>
-<div class="circle circle3"></div>
-<div class="circle circle4"></div>
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
 
-<div class="container d-flex justify-content-center align-items-center"
-     style="min-height:100vh;">
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
 
-    <div class="auth-card">
+                    <form action="{{ route('login') }}" method="POST">
+                        @csrf
 
-        <!-- Logo -->
-        <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">
+                                <i class="fas fa-envelope me-2"></i> Alamat Email
+                            </label>
+                            <input type="email" name="email" id="email"
+                                   class="form-control @error('email') is-invalid @enderror"
+                                   value="{{ old('email') }}" placeholder="Masukkan alamat email" required autofocus>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-            <i class="fas fa-book-open"
-               style="
-               font-size:80px;
-               color:#5eead4;
-               text-shadow:0 0 20px #5eead4;
-               ">
-            </i>
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-bold">
+                                <i class="fas fa-lock me-2"></i> Password
+                            </label>
+                            <input type="password" name="password" id="password"
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   placeholder="Masukkan password" required>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" name="remember" id="remember" class="form-check-input">
+                            <label for="remember" class="form-check-label">Ingat Saya</label>
+                        </div>
 
-        <!-- Judul -->
-        <h1 class="auth-title text-center">
-            LIBRARY MINI
-        </h1>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
+                        </button>
 
-        <p class="auth-subtitle text-center">
-            Sistem Manajemen Perpustakaan Digital
-        </p>
+                        <div class="text-center mt-3">
+                            <a href="{{ route('register') }}" class="text-muted text-decoration-none">
+                                Belum punya akun? <strong>Register</strong>
+                            </a>
+                        </div>
 
-        <!-- Form Login -->
-        <form method="POST"
-              action="{{ route('login') }}">
-
-            @csrf
-
-            <div class="form-group mb-4">
-
-                <label class="auth-label">
-                    Email
-                </label>
-
-                <input type="email"
-                       name="email"
-                       class="form-control form-control-user"
-                       placeholder="Masukkan email"
-                       required>
-
+                        <div class="text-center mt-2">
+                            <a href="{{ route('password.request') }}" class="text-muted text-decoration-none small">
+                                Lupa Password?
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group mb-5">
-
-                <label class="auth-label">
-                    Password
-                </label>
-
-                <input type="password"
-                       name="password"
-                       class="form-control form-control-user"
-                       placeholder="Masukkan password"
-                       required>
-
-            </div>
-
-            <button type="submit"
-                    class="btn btn-login btn-block">
-
-                <i class="fas fa-sign-in-alt"></i>
-
-                Login
-
-            </button>
-
-        </form>
-
-        <hr style="border-color:rgba(255,255,255,.2);">
-
-        <!-- Link Register -->
-        <div class="text-center">
-
-            <span class="text-light">
-
-                Belum punya akun?
-
-            </span>
-
-            <a href="{{ route('register') }}"
-               class="auth-link">
-
-                Register
-
-            </a>
-
         </div>
-
     </div>
-
 </div>
-
 @endsection

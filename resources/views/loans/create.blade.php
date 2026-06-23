@@ -8,13 +8,11 @@
 
 <div class="card shadow">
     <div class="card-body">
-        {{-- 🔴 PERBAIKAN 1: Tambahkan action, method, dan @csrf --}}
         <form action="{{ route('loans.store') }}" method="POST">
             @csrf
 
             <div class="form-group">
                 <label>Nama Peminjam</label>
-                {{-- 🔴 PERBAIKAN 2: Tambahkan name dan value --}}
                 <select name="peminjam" class="form-control" required>
                     <option value="Admin">Admin</option>
                     <option value="User 1">User 1</option>
@@ -24,7 +22,6 @@
 
             <div class="form-group">
                 <label>Buku</label>
-                {{-- 🔴 PERBAIKAN 3: Tambahkan name dan value --}}
                 <select name="buku" class="form-control" required>
                     <option value="Laravel 12">Laravel 12</option>
                     <option value="Basis Data">Basis Data</option>
@@ -34,7 +31,6 @@
 
             <div class="form-group">
                 <label>Tanggal Pinjam</label>
-                {{-- 🔴 PERBAIKAN 4: Tambahkan name --}}
                 <input type="date" name="tanggal_pinjam" class="form-control" required>
             </div>
 

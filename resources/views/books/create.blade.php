@@ -10,7 +10,6 @@
 
 <div class="card shadow">
     <div class="card-body">
-        <!-- Informasi Kode Buku Otomatis -->
         <div class="alert alert-info alert-dismissible fade show" role="alert">
             <div class="d-flex align-items-center">
                 <i class="fas fa-info-circle fa-2x me-3"></i>
@@ -26,7 +25,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <!-- Alert Peringatan Duplikat -->
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <div class="d-flex align-items-center">
                 <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
@@ -42,11 +40,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <!-- Form -->
         <form action="{{ route('buku.store') }}" method="POST">
             @csrf
 
-            <!-- Judul Buku -->
             <div class="form-group mb-3">
                 <label for="judul_buku" class="fw-bold">
                     <i class="fas fa-book me-1"></i> Judul Buku <span class="text-danger">*</span>
@@ -66,7 +62,6 @@
                 @enderror
             </div>
 
-            <!-- Pengarang -->
             <div class="form-group mb-3">
                 <label for="pengarang" class="fw-bold">
                     <i class="fas fa-user me-1"></i> Pengarang <span class="text-danger">*</span>
@@ -86,7 +81,6 @@
                 @enderror
             </div>
 
-            <!-- Penerbit -->
             <div class="form-group mb-3">
                 <label for="penerbit" class="fw-bold">
                     <i class="fas fa-building me-1"></i> Penerbit <span class="text-danger">*</span>
@@ -106,7 +100,6 @@
                 @enderror
             </div>
 
-            <!-- Stok -->
             <div class="form-group mb-4">
                 <label for="stok" class="fw-bold">
                     <i class="fas fa-boxes me-1"></i> Stok <span class="text-danger">*</span>
@@ -130,7 +123,6 @@
                 </small>
             </div>
 
-            <!-- Tombol -->
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save me-1"></i> Simpan

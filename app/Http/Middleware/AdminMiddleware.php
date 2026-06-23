@@ -17,12 +17,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Cek apakah user login
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        // Cek apakah user memiliki role 'admin'
         if (Auth::user()->role !== 'admin') {
             return redirect()->route('dashboard')
                 ->with('error', 'Anda tidak memiliki akses ke halaman ini!');

@@ -6,23 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    
-    public function up(): void
+    public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'role')) {
-                $table->string('role')->default('user')->after('email');
-            }
+            $table->string('otp')->nullable()->after('role');
+            $table->timestamp('otp_expires_at')->nullable()->after('otp');
         });
     }
 
-    
-    public function down(): void
+    public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'role')) {
-                $table->dropColumn('role');
-            }
+            $table->dropColumn(['otp', 'otp_expires_at']);
         });
     }
 };
