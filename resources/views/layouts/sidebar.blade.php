@@ -13,6 +13,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Dashboard -->
+    <!-- Dashboard (Semua User) -->
     <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('dashboard') }}">
             <i class="fas fa-fw fa-home"></i>
@@ -62,4 +63,43 @@
             </button>
         </form>
     </li>
+        </a>
+    </li>
+
+    <!-- ========================================== -->
+    <!-- MENU UNTUK ADMIN SAJA                      -->
+    <!-- ========================================== -->
+    @auth
+        @if(Auth::user()->role === 'admin')
+            <hr class="sidebar-divider">
+
+            <div class="sidebar-heading">
+                MASTER DATA
+            </div>
+
+            <!-- Data Buku -->
+            <li class="nav-item {{ request()->routeIs('buku.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('buku.index') }}">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Data Buku</span>
+                </a>
+            </li>
+
+            <!-- Data Peminjaman -->
+            <li class="nav-item {{ request()->routeIs('loans.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('loans.index') }}">
+                    <i class="fas fa-fw fa-handshake"></i>
+                    <span>Data Peminjaman</span>
+                </a>
+            </li>
+        @endif
+    @endauth
+
+   
+    @auth
+        
+    @endauth
+
+  
+
 </ul>
