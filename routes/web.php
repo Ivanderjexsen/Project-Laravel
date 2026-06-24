@@ -10,6 +10,7 @@ use App\Http\Controllers\book\UserBukuController;
 use App\Http\Controllers\ProfileController;  // ✅ TAMBAHKAN INI
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserLoanController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -20,7 +21,11 @@ Route::middleware(['auth'])->group(function () {
     // ============================================
     // DASHBOARD
     // ============================================
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+    // Auth::routes();
 
     // Route untuk Buku
     // Route::get('/books', [BookController::class, 'index'])->name('books.index');
@@ -38,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::delete('/loans/{id}', [LoanController::class, 'destroy'])->name('loans.destroy');
     // Nanti tambahkan route untuk update & delete
 
-    Route::get('/history', [LoanController::class, 'index'])->name('history.index');
+    // Route::get('/history', [LoanController::class, 'index'])->name('history.index');
 });
 
 
