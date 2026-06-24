@@ -48,16 +48,11 @@ class Buku extends Model
     // === KURANGI STOK ===
     public function kurangiStok()
     {
-        Log::info('📌 kurangiStok dipanggil untuk: ' . $this->judul_buku);
-        Log::info('📌 Stok SEBELUM: ' . $this->stok);
-
-        // ❌ HAPUS INI - JANGAN KURANGI TOTAL STOK
-        // $this->decrement('stok');
-
-        // ✅ TOTAL STOK TETAP, TIDAK BERKURANG
-        // Stok tersedia akan dihitung dari total stok - dipinjam
-
-        Log::info('📌 Stok TETAP: ' . $this->stok);
+        if ($this->stok > 0) {
+            $this->decrement('stok');
+            Log::info('📌 Stok SESUDAH: ' . $this->stok);
+            return true;
+        }
         return true;
     }
 
@@ -66,10 +61,8 @@ class Buku extends Model
         Log::info('📌 tambahStok dipanggil untuk: ' . $this->judul_buku);
         Log::info('📌 Stok SEBELUM: ' . $this->stok);
 
-        // ❌ HAPUS INI - JANGAN TAMBAH TOTAL STOK
-        // $this->increment('stok');
+        $this->increment('stok');
 
-        // ✅ TOTAL STOK TETAP, TIDAK BERTAMBAH
         Log::info('📌 Stok TETAP: ' . $this->stok);
         return true;
     }
